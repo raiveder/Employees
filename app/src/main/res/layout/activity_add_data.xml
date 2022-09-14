@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddData">
+
+    <EditText
+        android:id="@+id/Surname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/surname"
+        android:text="Горев"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/Name"/>
+
+    <EditText
+        android:id="@+id/Name"
+        android:hint="@string/name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/Surname"
+        android:text="Степан"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/Age"/>
+
+    <EditText
+        android:id="@+id/Age"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/age"
+        app:layout_constraintBottom_toTopOf="@id/btnAdd"
+        android:text="25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Name" />
+
+    <android.widget.Button
+        android:id="@+id/btnAdd"
+        android:background="@drawable/buttonbackground"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/add"
+        app:layout_constraintEnd_toStartOf="@id/btnBack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Age"
+        android:layout_marginRight="1dp"
+        android:layout_marginLeft="1dp"/>
+
+    <android.widget.Button
+        android:id="@+id/btnBack"
+        android:background="@drawable/buttonbackground"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnAdd"
+        app:layout_constraintTop_toBottomOf="@id/Age"
+        android:layout_marginRight="1dp"
+        android:layout_marginLeft="1dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

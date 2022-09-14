@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Сотрудники</string>
+    <string name="addData">Добавить запись</string>
+    <string name="surname">Фамилия</string>
+    <string name="name">Имя</string>
+    <string name="age">Возраст</string>
+    <string name="add">Добавить</string>
+    <string name="back">Назад</string>
+</resources>
