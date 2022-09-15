@@ -21,7 +21,6 @@ public class AddData extends AppCompatActivity implements View.OnClickListener {
     TextView txtName;
     TextView txtAge;
     Connection connection;
-    String ConnectionResult = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +92,10 @@ public class AddData extends AppCompatActivity implements View.OnClickListener {
                         Toast.makeText(this, "Сотрудник успешно добавлен", Toast.LENGTH_LONG).show();
                         break;
                     } else {
-                        ConnectionResult = "Check connection";
+                        Toast.makeText(this, "Проверьте подключение!", Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception ex) {
-
+                    Toast.makeText(this, "Возникла ошибка!", Toast.LENGTH_LONG).show();
                 }
         }
     }

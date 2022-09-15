@@ -11,16 +11,17 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Connection connection;
-    String ConnectionResult = "";
     Button btnAdd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnAdd = findViewById(R.id.btnAdd);
         btnAdd.setOnClickListener((view -> {
-            Intent intent = new Intent(MainActivity.this,AddData.class);
+            Intent intent = new Intent(MainActivity.this, AddData.class);
             startActivity(intent);
         }));
 
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
                 printHeader();
 
-
+                int id = 1;
                 TableLayout dbOutput = findViewById(R.id.dbOutput);
                 while (resultSet.next()) {
                     TableRow dbOutputRow = new TableRow(this);
@@ -58,44 +59,57 @@ public class MainActivity extends AppCompatActivity {
                     TextView outputID = new TextView(this);
                     params.weight = 1.0f;
                     outputID.setLayoutParams(params);
-                    outputID.setText(resultSet.getString(1));
+                    outputID.setText(String.valueOf(id++));
+                    outputID.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                     dbOutputRow.addView(outputID);
 
                     TextView outputSurname = new TextView(this);
                     params.weight = 3.0f;
                     outputSurname.setLayoutParams(params);
                     outputSurname.setText(resultSet.getString(2));
+                    outputSurname.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                     dbOutputRow.addView(outputSurname);
 
                     TextView outputFirstname = new TextView(this);
                     params.weight = 3.0f;
                     outputFirstname.setLayoutParams(params);
                     outputFirstname.setText(resultSet.getString(3));
+                    outputFirstname.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                     dbOutputRow.addView(outputFirstname);
 
                     TextView outputAge = new TextView(this);
                     params.weight = 2.0f;
                     outputAge.setLayoutParams(params);
                     outputAge.setText(resultSet.getString(4));
+                    outputAge.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                     dbOutputRow.addView(outputAge);
 
-                    dbOutput.addView(dbOutputRow);
+                    Button deleteBtn = new Button(this);
+                    deleteBtn.setOnClickListener(this);
+                    params.weight = 1.0f;
+                    params.width = (int) 1.0f;
+                    deleteBtn.setLayoutParams(params);
+                    deleteBtn.setText("\uD83D\uDDD1");
+                    deleteBtn.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    deleteBtn.setId(resultSet.getInt(1));
+                    dbOutputRow.addView(deleteBtn);
 
+                    dbOutput.addView(dbOutputRow);
                 }
 
             } else {
-                ConnectionResult = "Check connection";
+                Toast.makeText(this, "Проверьте подключение!", Toast.LENGTH_LONG).show();
             }
         } catch (Exception ex) {
-
+            Toast.makeText(this, "Возникла ошибка!", Toast.LENGTH_LONG).show();
         }
     }
 
-    public void printHeader() {
+    private void printHeader() {
         TableLayout dbHeaders = findViewById(R.id.dbOutput);
         dbHeaders.removeAllViews();
-        TableRow dbOutputRow = new TableRow(this);
-        dbOutputRow.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        TableRow dbHeadersRow = new TableRow(this);
+        dbHeadersRow.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         TableRow.LayoutParams params = new TableRow.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
@@ -103,27 +117,57 @@ public class MainActivity extends AppCompatActivity {
         params.weight = 1.0f;
         outputID.setLayoutParams(params);
         outputID.setText("№\n");
-        dbOutputRow.addView(outputID);
+        outputID.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        dbHeadersRow.addView(outputID);
 
         TextView outputSurname = new TextView(this);
         params.weight = 3.0f;
         outputSurname.setLayoutParams(params);
         outputSurname.setText("Фамилия\n");
-        dbOutputRow.addView(outputSurname);
+        outputSurname.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        dbHeadersRow.addView(outputSurname);
 
         TextView outputFirstname = new TextView(this);
         params.weight = 3.0f;
         outputFirstname.setLayoutParams(params);
         outputFirstname.setText("Имя\n");
-        dbOutputRow.addView(outputFirstname);
+        outputFirstname.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        dbHeadersRow.addView(outputFirstname);
 
         TextView outputAge = new TextView(this);
         params.weight = 2.0f;
         outputAge.setLayoutParams(params);
         outputAge.setText("Возраст\n");
-        dbOutputRow.addView(outputAge);
+        outputAge.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        dbHeadersRow.addView(outputAge);
 
-        dbHeaders.addView(dbOutputRow);
+        TextView outputBtn = new TextView(this);
+        params.weight = 1.0f;
+        outputBtn.setLayoutParams(params);
+        dbHeadersRow.addView(outputBtn);
+
+        dbHeaders.addView(dbHeadersRow);
     }
 
+    @Override
+    public void onClick(View v) {
+        try {
+            DBHelper dbHelper = new DBHelper();
+            connection = dbHelper.connectionClass();
+            String id = String.valueOf((v.getId()));
+            if (connection != null) {
+                String query = "DELETE FROM Employees WHERE Id = " + id;
+                Statement statement = connection.createStatement();
+                statement.executeUpdate(query);
+
+                Toast.makeText(this, "Сотрудник успешно удалён", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Проверьте подключение!", Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception ex) {
+            Toast.makeText(this, "Возникла ошибка!", Toast.LENGTH_LONG).show();
+        }
+
+        getTextFromSQL();
+    }
 }
