@@ -3,6 +3,7 @@ package com.example.employees;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.telecom.ConnectionRequest;
 import android.view.View;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Connection connection;
     Button btnAdd;
+    static String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getTextFromSQL();
     }
 
-    public void getTextFromSQL() {
+    private void getTextFromSQL() {
         try {
             DBHelper dbHelper = new DBHelper();
             connection = dbHelper.connectionClass();
@@ -84,15 +86,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     outputAge.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                     dbOutputRow.addView(outputAge);
 
-                    Button deleteBtn = new Button(this);
-                    deleteBtn.setOnClickListener(this);
+                    Button changeBtn = new Button(this);
+                    changeBtn.setOnClickListener(this);
                     params.weight = 1.0f;
-                    params.width = (int) 1.0f;
-                    deleteBtn.setLayoutParams(params);
-                    deleteBtn.setText("\uD83D\uDDD1");
-                    deleteBtn.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    deleteBtn.setId(resultSet.getInt(1));
-                    dbOutputRow.addView(deleteBtn);
+                    params.width = 1;
+                    params.bottomMargin = (int) 10;
+                    changeBtn.setLayoutParams(params);
+                    changeBtn.setBackgroundResource(R.drawable.buttonbackground);
+                    changeBtn.setText("-->");
+                    changeBtn.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    changeBtn.setId(resultSet.getInt(1));
+                    dbOutputRow.addView(changeBtn);
 
                     dbOutput.addView(dbOutputRow);
                 }
@@ -154,13 +158,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             DBHelper dbHelper = new DBHelper();
             connection = dbHelper.connectionClass();
-            String id = String.valueOf((v.getId()));
+            id = String.valueOf((v.getId()));
             if (connection != null) {
-                String query = "DELETE FROM Employees WHERE Id = " + id;
-                Statement statement = connection.createStatement();
-                statement.executeUpdate(query);
-
-                Toast.makeText(this, "Сотрудник успешно удалён", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(MainActivity.this, Change.class);
+                    startActivity(intent);
             } else {
                 Toast.makeText(this, "Проверьте подключение!", Toast.LENGTH_LONG).show();
             }
