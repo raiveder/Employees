@@ -7,8 +7,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.telecom.ConnectionRequest;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -20,8 +23,10 @@ import java.sql.Statement;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    Spinner spinner;
     Connection connection;
     Button btnAdd;
+    TableLayout dbOutput;
     static String id;
 
     @Override
@@ -34,23 +39,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(MainActivity.this, AddData.class);
             startActivity(intent);
         }));
+        dbOutput = findViewById(R.id.dbOutput);
+
+        spinner = findViewById(R.id.spinner);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                //TableLayout dbOutput = findViewById(R.id.dbOutput);
+                //outputDB.removeView(outputDBRow);
+                //outputDB.invalidate();
+
+                if(spinner.getSelectedItemPosition() == 0) {
+                    getTextFromSQL("Select * FROM Employees");
+                }
+
+                if(spinner.getSelectedItemPosition() == 1) {
+                    getTextFromSQL("Select * FROM Employees ORDER BY Age ASC");
+                }
+
+                if(spinner.getSelectedItemPosition() == 2) {
+                    getTextFromSQL("Select * FROM Employees ORDER BY Age DESC");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                return;
+            }
+
+        });
 
         printHeader();
-        getTextFromSQL();
+        getTextFromSQL("Select * FROM Employees");
     }
 
-    private void getTextFromSQL() {
+    private void getTextFromSQL(String query) {
         try {
             DBHelper dbHelper = new DBHelper();
             connection = dbHelper.connectionClass();
 
             if (connection != null) {
-                String query = "Select * FROM Employees";
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(query);
 
                 int id = 1;
-                TableLayout dbOutput = findViewById(R.id.dbOutput);
                 while (resultSet.next()) {
                     TableRow dbOutputRow = new TableRow(this);
                     dbOutputRow.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
