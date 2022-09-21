@@ -18,7 +18,6 @@ import java.sql.Statement;
 public class DBHelper {
 
     String userName, userPassword, ip, port, dataBase;
-    Connection connection;
 
     public Connection connectionClass() {
         ip = "ngknn.ru";
@@ -31,7 +30,7 @@ public class DBHelper {
         StrictMode.setThreadPolicy(policy);
 
         Connection connection = null;
-        String connectionURL = null;
+        String connectionURL;
 
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");

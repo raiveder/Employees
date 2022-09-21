@@ -8,4 +8,10 @@
     <string name="back">Назад</string>
     <string name="change">Изменить</string>
     <string name="delete">Удалить</string>
+    <string name="sort">Сортировка:</string>
+    <string-array name="spinnerItems">
+        <item>нет</item>
+        <item>по возрастанию</item>
+        <item>по убыванию</item>
+    </string-array>
 </resources>

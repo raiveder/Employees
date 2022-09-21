@@ -97,64 +97,50 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-
-        String Surname = txtSurname.getText().toString();
-        String Name = txtName.getText().toString();
-        String Age = txtAge.getText().toString();
+        String query;
 
         switch (v.getId()) {
-
             case R.id.btnChange:
-                try {
-                    DBHelper dbHelper = new DBHelper();
-                    connection = dbHelper.connectionClass();
+                String Surname = txtSurname.getText().toString();
+                String Name = txtName.getText().toString();
+                String Age = txtAge.getText().toString();
 
-                    if (connection != null) {
-                        String query = "UPDATE Employees SET Surname = '" + Surname +
-                                "', Firstname ='" + Name + "', Age = " + Age +
-                                " WHERE Id = " + MainActivity.id;
-                        Statement statement = connection.createStatement();
-                        statement.executeUpdate(query);
-
-                        txtSurname.clearFocus();
-                        txtName.clearFocus();
-                        txtAge.clearFocus();
-
-                        Toast.makeText(this, "Данные успешно изменены", Toast.LENGTH_LONG).show();
-                        break;
-                    } else {
-                        Toast.makeText(this, "Проверьте подключение!", Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception ex) {
-                    Toast.makeText(this, "Возникла ошибка!", Toast.LENGTH_LONG).show();
-                }
+                query = "UPDATE Employees SET Surname = '" + Surname +
+                        "', Firstname ='" + Name + "', Age = " + Age +
+                        " WHERE Id = " + MainActivity.id;
+                updateQuery(query, "Данные успешно изменены");
+                break;
 
             case R.id.btnDel:
-                try {
-                    DBHelper dbHelper = new DBHelper();
-                    connection = dbHelper.connectionClass();
+                query = "DELETE FROM Employees WHERE Id = " + MainActivity.id;
+                updateQuery(query, "Сотрудник успешно удалён");
 
-                    if (connection != null) {
-                        String query = "DELETE FROM Employees WHERE Id = " + MainActivity.id;
-                        Statement statement = connection.createStatement();
-                        statement.executeUpdate(query);
+                Intent intent = new Intent(Change.this, MainActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
 
-                        txtSurname.setText("");
-                        txtName.setText("");
-                        txtAge.setText("");
+    private void updateQuery(String query, String yesMessage) {
 
-                        txtSurname.clearFocus();
-                        txtName.clearFocus();
-                        txtAge.clearFocus();
+        try {
+            DBHelper dbHelper = new DBHelper();
+            connection = dbHelper.connectionClass();
 
-                        Toast.makeText(this, "Сотрудник успешно удалён", Toast.LENGTH_LONG).show();
-                        break;
-                    } else {
-                        Toast.makeText(this, "Проверьте подключение!", Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception ex) {
-                    Toast.makeText(this, "Возникла ошибка!", Toast.LENGTH_LONG).show();
-                }
+            if (connection != null) {
+                Statement statement = connection.createStatement();
+                statement.executeUpdate(query);
+
+                txtSurname.clearFocus();
+                txtName.clearFocus();
+                txtAge.clearFocus();
+
+                Toast.makeText(this, yesMessage, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Проверьте подключение!", Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception ex) {
+            Toast.makeText(this, "Возникла ошибка!", Toast.LENGTH_LONG).show();
         }
     }
 }

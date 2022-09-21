@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         }));
 
+        printHeader();
         getTextFromSQL();
     }
 
@@ -47,8 +48,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String query = "Select * FROM Employees";
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(query);
-
-                printHeader();
 
                 int id = 1;
                 TableLayout dbOutput = findViewById(R.id.dbOutput);
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     changeBtn.setOnClickListener(this);
                     params.weight = 1.0f;
                     params.width = 1;
-                    params.bottomMargin = (int) 10;
+                    params.bottomMargin = 10;
                     changeBtn.setLayoutParams(params);
                     changeBtn.setBackgroundResource(R.drawable.buttonbackground);
                     changeBtn.setText("-->");
@@ -168,7 +167,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception ex) {
             Toast.makeText(this, "Возникла ошибка!", Toast.LENGTH_LONG).show();
         }
-
-        getTextFromSQL();
     }
 }

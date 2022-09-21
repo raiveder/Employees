@@ -6,6 +6,40 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <TextView
+        android:id="@+id/tvSort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sort"
+        android:textColor="@color/black"
+        android:textSize="7pt"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/scroll"
+        app:layout_constraintEnd_toStartOf="@id/spinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/spinnerItems"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/scroll"
+        app:layout_constraintStart_toEndOf="@id/tvSort"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/Surname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/surname"
+        android:textSize="7pt"
+        android:paddingTop="0px"
+        app:layout_constraintBottom_toTopOf="@+id/scroll"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <ScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
@@ -15,7 +49,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btnAdd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/spinner">
 
         <TableLayout
             android:id="@+id/dbOutput"
@@ -35,6 +69,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scroll" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
