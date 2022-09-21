@@ -42,11 +42,24 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/change"
-        app:layout_constraintEnd_toStartOf="@id/btnBack"
+        app:layout_constraintEnd_toStartOf="@id/btnDel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/Age"
         android:layout_marginRight="5dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"/>
+
+    <android.widget.Button
+        android:id="@+id/btnDel"
+        android:background="@drawable/buttonbackground"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/delete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnChange"
+        app:layout_constraintTop_toBottomOf="@id/Age"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"/>
 
     <android.widget.Button
@@ -56,10 +69,9 @@
         android:layout_height="wrap_content"
         android:text="@string/back"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btnChange"
-        app:layout_constraintTop_toBottomOf="@id/Age"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnChange"
+        android:layout_marginHorizontal="100dp"
+        android:layout_marginTop="10dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
 
     Button btnBack;
     Button btnChange;
+    Button btnDel;
     TextView txtSurname;
     TextView txtName;
     TextView txtAge;
@@ -35,6 +36,9 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
 
         btnChange = findViewById(R.id.btnChange);
         btnChange.setOnClickListener(this);
+
+        btnDel = findViewById(R.id.btnDel);
+        btnDel.setOnClickListener(this);
 
         txtSurname = findViewById(R.id.Surname);
         txtSurname.setOnFocusChangeListener((v, hasFocus) -> {
@@ -117,6 +121,33 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
                         txtAge.clearFocus();
 
                         Toast.makeText(this, "Данные успешно изменены", Toast.LENGTH_LONG).show();
+                        break;
+                    } else {
+                        Toast.makeText(this, "Проверьте подключение!", Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception ex) {
+                    Toast.makeText(this, "Возникла ошибка!", Toast.LENGTH_LONG).show();
+                }
+
+            case R.id.btnDel:
+                try {
+                    DBHelper dbHelper = new DBHelper();
+                    connection = dbHelper.connectionClass();
+
+                    if (connection != null) {
+                        String query = "DELETE FROM Employees WHERE Id = " + MainActivity.id;
+                        Statement statement = connection.createStatement();
+                        statement.executeUpdate(query);
+
+                        txtSurname.setText("");
+                        txtName.setText("");
+                        txtAge.setText("");
+
+                        txtSurname.clearFocus();
+                        txtName.clearFocus();
+                        txtAge.clearFocus();
+
+                        Toast.makeText(this, "Сотрудник успешно удалён", Toast.LENGTH_LONG).show();
                         break;
                     } else {
                         Toast.makeText(this, "Проверьте подключение!", Toast.LENGTH_LONG).show();

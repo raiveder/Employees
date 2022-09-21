@@ -156,9 +156,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         try {
+            id = String.valueOf((v.getId()));
             DBHelper dbHelper = new DBHelper();
             connection = dbHelper.connectionClass();
-            id = String.valueOf((v.getId()));
             if (connection != null) {
                     Intent intent = new Intent(MainActivity.this, Change.class);
                     startActivity(intent);
