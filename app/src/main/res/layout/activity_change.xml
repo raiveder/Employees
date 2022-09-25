@@ -7,7 +7,7 @@
     tools:context=".Change">
 
     <EditText
-        android:id="@+id/Surname"
+        android:id="@+id/FindSurname"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/surname"
@@ -21,7 +21,7 @@
         android:hint="@string/name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/Surname"
+        app:layout_constraintTop_toBottomOf="@id/FindSurname"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/Age"/>

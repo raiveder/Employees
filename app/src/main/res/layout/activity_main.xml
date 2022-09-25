@@ -8,11 +8,11 @@
 
     <TextView
         android:id="@+id/tvSort"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/sort"
         android:textColor="@color/black"
-        android:textSize="7pt"
+        android:textSize="8pt"
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/scroll"
         app:layout_constraintEnd_toStartOf="@id/spinner"
@@ -21,24 +21,26 @@
 
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:entries="@array/spinnerItems"
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/scroll"
         app:layout_constraintStart_toEndOf="@id/tvSort"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/FindSurname"/>
 
     <EditText
-        android:id="@+id/Surname"
-        android:layout_width="wrap_content"
+        android:id="@+id/FindSurname"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/surname"
-        android:textSize="7pt"
+        android:textSize="8pt"
         android:paddingTop="0px"
         app:layout_constraintBottom_toTopOf="@+id/scroll"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/spinner"/>
 
     <ScrollView
         android:id="@+id/scroll"

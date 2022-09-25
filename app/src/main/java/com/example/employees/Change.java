@@ -40,7 +40,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
         btnDel = findViewById(R.id.btnDel);
         btnDel.setOnClickListener(this);
 
-        txtSurname = findViewById(R.id.Surname);
+        txtSurname = findViewById(R.id.FindSurname);
         txtSurname.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)
                 txtSurname.setHint("");

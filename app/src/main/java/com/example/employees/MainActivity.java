@@ -3,13 +3,13 @@ package com.example.employees;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.telecom.ConnectionRequest;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Connection connection;
     Button btnAdd;
     TableLayout dbOutput;
+    EditText findBySurname;
     static String id;
 
     @Override
@@ -41,13 +42,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }));
         dbOutput = findViewById(R.id.dbOutput);
 
+        findBySurname = findViewById(R.id.FindSurname);
+        findBySurname.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                getTextFromSQL("Select * FROM Employees WHERE Surname LIKE '%" + findBySurname.getText() + "%'");
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
         spinner = findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                //TableLayout dbOutput = findViewById(R.id.dbOutput);
-                //outputDB.removeView(outputDBRow);
-                //outputDB.invalidate();
+
+                findBySurname.setText("");
 
                 if(spinner.getSelectedItemPosition() == 0) {
                     getTextFromSQL("Select * FROM Employees");
@@ -69,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         });
 
-        printHeader();
         getTextFromSQL("Select * FROM Employees");
     }
 
@@ -81,6 +95,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (connection != null) {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(query);
+
+                dbOutput.removeAllViews();
+                printHeader();
 
                 int id = 1;
                 while (resultSet.next()) {

@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class AddData extends AppCompatActivity implements View.OnClickListener {
@@ -36,7 +35,7 @@ public class AddData extends AppCompatActivity implements View.OnClickListener {
         btnAdd = findViewById(R.id.btnAdd);
         btnAdd.setOnClickListener(this);
 
-        txtSurname = findViewById(R.id.Surname);
+        txtSurname = findViewById(R.id.FindSurname);
         txtSurname.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)
                 txtSurname.setHint("");
