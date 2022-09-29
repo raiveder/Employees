@@ -15,7 +15,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class DBHelper {
+public class ConnectionHelper {
 
     String userName, userPassword, ip, port, dataBase;
 
@@ -34,7 +34,8 @@ public class DBHelper {
 
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            connectionURL = "jdbc:jtds:sqlserver://" + ip + ":" + port + ";" + "databasename=" + dataBase + ";user=" + userName + ";password=" + userPassword + ";";
+            connectionURL = "jdbc:jtds:sqlserver://" + ip + ":" + port + ";" + "databasename=" +
+                    dataBase + ";user=" + userName + ";password=" + userPassword + ";";
             connection = DriverManager.getConnection(connectionURL);
         } catch (Exception ex) {
             Log.e("Error", ex.getMessage());

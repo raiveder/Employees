@@ -71,7 +71,7 @@ public class AddData extends AppCompatActivity implements View.OnClickListener {
 
             case R.id.btnAdd:
                 try {
-                    DBHelper dbHelper = new DBHelper();
+                    ConnectionHelper dbHelper = new ConnectionHelper();
                     connection = dbHelper.connectionClass();
 
                     if (connection != null) {

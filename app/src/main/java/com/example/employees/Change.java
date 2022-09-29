@@ -69,7 +69,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
 
     private void setText(){
         try {
-            DBHelper dbHelper = new DBHelper();
+            ConnectionHelper dbHelper = new ConnectionHelper();
             connection = dbHelper.connectionClass();
 
             if (connection != null) {
@@ -124,7 +124,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
     private void updateQuery(String query, String yesMessage) {
 
         try {
-            DBHelper dbHelper = new DBHelper();
+            ConnectionHelper dbHelper = new ConnectionHelper();
             connection = dbHelper.connectionClass();
 
             if (connection != null) {

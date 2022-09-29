@@ -6,70 +6,142 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/tvSort"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/sort"
-        android:textColor="@color/black"
-        android:textSize="8pt"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/scroll"
-        app:layout_constraintEnd_toStartOf="@id/spinner"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:entries="@array/spinnerItems"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/scroll"
-        app:layout_constraintStart_toEndOf="@id/tvSort"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/FindSurname"/>
-
-    <EditText
-        android:id="@+id/FindSurname"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/surname"
-        android:textSize="8pt"
-        android:paddingTop="0px"
-        app:layout_constraintBottom_toTopOf="@+id/scroll"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/spinner"/>
-
-    <ScrollView
-        android:id="@+id/scroll"
+    <LinearLayout
+        android:id="@+id/lineFunc"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@+id/btnAdd"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/btnAdd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spinner">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TableLayout
-            android:id="@+id/dbOutput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </ScrollView>
+        <TextView
+            android:id="@+id/tvSort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sort"
+            android:textColor="@color/black"
+            android:textSize="8pt"
+            app:layout_constraintBottom_toBottomOf="@id/lineFunc"
+            app:layout_constraintEnd_toStartOf="@id/spinner"
+            app:layout_constraintStart_toStartOf="@id/lineFunc"
+            app:layout_constraintTop_toTopOf="@id/lineFunc" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/spinnerItems"
+            app:layout_constraintBottom_toBottomOf="@id/lineFunc"
+            app:layout_constraintEnd_toStartOf="@id/FindSurname"
+            app:layout_constraintStart_toEndOf="@id/tvSort"
+            app:layout_constraintTop_toTopOf="@id/lineFunc" />
+
+        <EditText
+            android:id="@+id/FindSurname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/surname"
+            android:paddingTop="0px"
+            android:textSize="8pt"
+            app:layout_constraintBottom_toBottomOf="@id/lineFunc"
+            app:layout_constraintEnd_toEndOf="@id/lineFunc"
+            app:layout_constraintStart_toEndOf="@id/spinner"
+            app:layout_constraintTop_toTopOf="@id/lineFunc" />
+    </LinearLayout>
 
     <android.widget.Button
         android:id="@+id/btnAdd"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="100dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="40dp"
         android:background="@drawable/buttonbackground"
         android:text="@string/addData"
+        app:layout_constraintBottom_toTopOf="@id/lineHeader"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lineFunc" />
+
+    <LinearLayout
+        android:id="@+id/lineHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/lvData"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnAdd">
+
+        <TextView
+            android:id="@+id/tvPhoto"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/photo"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="8pt"
+            app:layout_constraintBottom_toBottomOf="@id/lineHeader"
+            app:layout_constraintEnd_toStartOf="@id/tvSurname"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/lineHeader" />
+
+        <TextView
+            android:id="@+id/tvSurname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/surname"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="8pt"
+            app:layout_constraintBottom_toBottomOf="@id/lineHeader"
+            app:layout_constraintEnd_toStartOf="@id/tvName"
+            app:layout_constraintStart_toEndOf="@id/tvPhoto"
+            app:layout_constraintTop_toTopOf="@id/lineHeader" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/name"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="8pt"
+            app:layout_constraintBottom_toBottomOf="@id/lineHeader"
+            app:layout_constraintEnd_toStartOf="@id/tvAge"
+            app:layout_constraintStart_toEndOf="@id/tvSurname"
+            app:layout_constraintTop_toTopOf="@id/lineHeader" />
+
+        <TextView
+            android:id="@+id/tvAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/age"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="8pt"
+            app:layout_constraintBottom_toBottomOf="@id/lineHeader"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tvName"
+            app:layout_constraintTop_toTopOf="@id/lineHeader" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lvData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scroll" />
+        app:layout_constraintTop_toBottomOf="@id/lineHeader"
+        tools:ignore="UsingOnClickInXml" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

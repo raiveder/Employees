@@ -1,53 +1,73 @@
 package com.example.employees;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity /*implements View.OnClickListener*/ {
 
     Spinner spinner;
     Connection connection;
     Button btnAdd;
-    TableLayout dbOutput;
+    ImageView imageView;
     EditText findBySurname;
     static String id;
+
+    View v;
+    List<Mask> data;
+    ListView listView;
+    AdapterMask pAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        v = findViewById(com.google.android.material.R.id.ghost_view);
 
         btnAdd = findViewById(R.id.btnAdd);
         btnAdd.setOnClickListener((view -> {
             Intent intent = new Intent(MainActivity.this, AddData.class);
             startActivity(intent);
         }));
-        dbOutput = findViewById(R.id.dbOutput);
 
         findBySurname = findViewById(R.id.FindSurname);
         findBySurname.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                getTextFromSQL("Select * FROM Employees WHERE Surname LIKE '%" + findBySurname.getText() + "%'");
+                getTextFromSQL(v, "Select * FROM Employees WHERE Surname LIKE '%" + findBySurname.getText() + "%'");
             }
 
             @Override
@@ -65,15 +85,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 findBySurname.setText("");
 
                 if(spinner.getSelectedItemPosition() == 0) {
-                    getTextFromSQL("Select * FROM Employees");
+                    getTextFromSQL(v, "Select * FROM Employees");
                 }
 
                 if(spinner.getSelectedItemPosition() == 1) {
-                    getTextFromSQL("Select * FROM Employees ORDER BY Age ASC");
+                    getTextFromSQL(v, "Select * FROM Employees ORDER BY Age ASC");
                 }
 
                 if(spinner.getSelectedItemPosition() == 2) {
-                    getTextFromSQL("Select * FROM Employees ORDER BY Age DESC");
+                    getTextFromSQL(v, "Select * FROM Employees ORDER BY Age DESC");
                 }
             }
 
@@ -84,128 +104,100 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         });
 
-        getTextFromSQL("Select * FROM Employees");
+        /*imageView.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            pickImg.launch(intent);        });*/
+
+        getTextFromSQL(v, "Select * FROM Employees");
     }
 
-    private void getTextFromSQL(String query) {
-        try {
-            DBHelper dbHelper = new DBHelper();
-            connection = dbHelper.connectionClass();
+    //отдельный метод для открытия
+   /* private final ActivityResultLauncher<Intent> pickImg = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == RESULT_OK) {
+            if (result.getData() != null) {
+                Uri uri = result.getData().getData();
+                try {
+                    InputStream is = getContentResolver().openInputStream(uri);
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    imageView.setImageBitmap(bitmap);
+                    String encodedImage = encodeImage(bitmap); //
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    });
 
+    //Из строки в изображение
+    private Bitmap getImgBitmap(String encodedImg) {
+        if (encodedImg != null) {
+            byte[] bytes = new byte[0];
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                bytes = Base64.getDecoder().decode(encodedImg);
+            }
+            return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        }
+        return BitmapFactory.decodeResource(DeteilsMask.this.getResources(),
+                R.drawable.picture);
+    }
+
+    //Изображение в строку
+    private String encodeImage(Bitmap bitmap) {
+        int prevW = 100;
+        int prevH = bitmap.getHeight() * prevW / bitmap.getWidth();
+        Bitmap b = Bitmap.createScaledBitmap(bitmap, prevW, prevH, false);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        b.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+        byte[] bytes = byteArrayOutputStream.toByteArray();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return Base64.getEncoder().encodeToString(bytes);
+        }
+        return "";
+    }*/
+
+    public void enterMobile() {
+        pAdapter.notifyDataSetInvalidated();
+        listView.setAdapter(pAdapter);
+    }
+
+    public void getTextFromSQL(View v, String query) {
+        data = new ArrayList<Mask>();
+        listView = findViewById(R.id.lvData);
+        pAdapter = new AdapterMask(MainActivity.this, data);
+        try {
+            ConnectionHelper connectionHelper = new ConnectionHelper();
+            connection = connectionHelper.connectionClass();
             if (connection != null) {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(query);
 
-                dbOutput.removeAllViews();
-                printHeader();
-
-                int id = 1;
                 while (resultSet.next()) {
-                    TableRow dbOutputRow = new TableRow(this);
-                    dbOutputRow.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-                    TableRow.LayoutParams params = new TableRow.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-                    TextView outputID = new TextView(this);
-                    params.weight = 1.0f;
-                    outputID.setLayoutParams(params);
-                    outputID.setText(String.valueOf(id++));
-                    outputID.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    dbOutputRow.addView(outputID);
-
-                    TextView outputSurname = new TextView(this);
-                    params.weight = 3.0f;
-                    outputSurname.setLayoutParams(params);
-                    outputSurname.setText(resultSet.getString(2));
-                    outputSurname.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-                    dbOutputRow.addView(outputSurname);
-
-                    TextView outputFirstname = new TextView(this);
-                    params.weight = 3.0f;
-                    outputFirstname.setLayoutParams(params);
-                    outputFirstname.setText(resultSet.getString(3));
-                    outputFirstname.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-                    dbOutputRow.addView(outputFirstname);
-
-                    TextView outputAge = new TextView(this);
-                    params.weight = 2.0f;
-                    outputAge.setLayoutParams(params);
-                    outputAge.setText(resultSet.getString(4));
-                    outputAge.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    dbOutputRow.addView(outputAge);
-
-                    Button changeBtn = new Button(this);
-                    changeBtn.setOnClickListener(this);
-                    params.weight = 1.0f;
-                    params.width = 1;
-                    params.bottomMargin = 10;
-                    changeBtn.setLayoutParams(params);
-                    changeBtn.setBackgroundResource(R.drawable.buttonbackground);
-                    changeBtn.setText("-->");
-                    changeBtn.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    changeBtn.setId(resultSet.getInt(1));
-                    dbOutputRow.addView(changeBtn);
-
-                    dbOutput.addView(dbOutputRow);
+                    Mask tempMask = new Mask
+                            (resultSet.getInt("Id"),
+                                    resultSet.getString("Surname"),
+                                    resultSet.getString("Firstname"),
+                                    Integer.parseInt(resultSet.getString("Age")),
+                                    resultSet.getString("Image")
+                            );
+                    data.add(tempMask);
+                    pAdapter.notifyDataSetInvalidated();
                 }
-
+                connection.close();
             } else {
-                Toast.makeText(this, "Проверьте подключение!", Toast.LENGTH_LONG).show();
             }
-        } catch (Exception ex) {
-            Toast.makeText(this, "Возникла ошибка!", Toast.LENGTH_LONG).show();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
+        enterMobile();
+
     }
 
-    private void printHeader() {
-        TableLayout dbHeaders = findViewById(R.id.dbOutput);
-        dbHeaders.removeAllViews();
-        TableRow dbHeadersRow = new TableRow(this);
-        dbHeadersRow.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        TableRow.LayoutParams params = new TableRow.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-        TextView outputID = new TextView(this);
-        params.weight = 1.0f;
-        outputID.setLayoutParams(params);
-        outputID.setText("№\n");
-        outputID.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        dbHeadersRow.addView(outputID);
-
-        TextView outputSurname = new TextView(this);
-        params.weight = 3.0f;
-        outputSurname.setLayoutParams(params);
-        outputSurname.setText("Фамилия\n");
-        outputSurname.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-        dbHeadersRow.addView(outputSurname);
-
-        TextView outputFirstname = new TextView(this);
-        params.weight = 3.0f;
-        outputFirstname.setLayoutParams(params);
-        outputFirstname.setText("Имя\n");
-        outputFirstname.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-        dbHeadersRow.addView(outputFirstname);
-
-        TextView outputAge = new TextView(this);
-        params.weight = 2.0f;
-        outputAge.setLayoutParams(params);
-        outputAge.setText("Возраст\n");
-        outputAge.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        dbHeadersRow.addView(outputAge);
-
-        TextView outputBtn = new TextView(this);
-        params.weight = 1.0f;
-        outputBtn.setLayoutParams(params);
-        dbHeadersRow.addView(outputBtn);
-
-        dbHeaders.addView(dbHeadersRow);
-    }
-
-    @Override
+    /*@Override
     public void onClick(View v) {
         try {
             id = String.valueOf((v.getId()));
-            DBHelper dbHelper = new DBHelper();
+            ConnectionHelper dbHelper = new ConnectionHelper();
             connection = dbHelper.connectionClass();
             if (connection != null) {
                     Intent intent = new Intent(MainActivity.this, Change.class);
@@ -216,5 +208,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception ex) {
             Toast.makeText(this, "Возникла ошибка!", Toast.LENGTH_LONG).show();
         }
-    }
+    }*/
 }
