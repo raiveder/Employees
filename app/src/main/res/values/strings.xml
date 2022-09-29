@@ -4,6 +4,7 @@
     <string name="surname">Фамилия</string>
     <string name="name">Имя</string>
     <string name="age">Возраст</string>
+    <string name="photo">Фото</string>
     <string name="add">Добавить</string>
     <string name="back">Назад</string>
     <string name="change">Изменить</string>
