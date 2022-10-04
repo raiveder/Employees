@@ -36,12 +36,12 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity /*implements View.OnClickListener*/ {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Spinner spinner;
     Connection connection;
     Button btnAdd;
-    ImageView imageView;
+    //ImageView imageView;
     EditText findBySurname;
     static String id;
 
@@ -104,6 +104,27 @@ public class MainActivity extends AppCompatActivity /*implements View.OnClickLis
 
         });
 
+        listView = findViewById(R.id.lvData);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                try {
+                    id = String.valueOf(arg3);
+                    ConnectionHelper dbHelper = new ConnectionHelper();
+                    connection = dbHelper.connectionClass();
+                    if (connection != null) {
+                        Intent intent = new Intent(MainActivity.this, Change.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(MainActivity.this, "Проверьте подключение!", Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception ex) {
+                    Toast.makeText(MainActivity.this, "Возникла ошибка!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         /*imageView.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -163,7 +184,6 @@ public class MainActivity extends AppCompatActivity /*implements View.OnClickLis
 
     public void getTextFromSQL(View v, String query) {
         data = new ArrayList<Mask>();
-        listView = findViewById(R.id.lvData);
         pAdapter = new AdapterMask(MainActivity.this, data);
         try {
             ConnectionHelper connectionHelper = new ConnectionHelper();
@@ -193,7 +213,7 @@ public class MainActivity extends AppCompatActivity /*implements View.OnClickLis
 
     }
 
-    /*@Override
+    @Override
     public void onClick(View v) {
         try {
             id = String.valueOf((v.getId()));
@@ -208,5 +228,5 @@ public class MainActivity extends AppCompatActivity /*implements View.OnClickLis
         } catch (Exception ex) {
             Toast.makeText(this, "Возникла ошибка!", Toast.LENGTH_LONG).show();
         }
-    }*/
+    }
 }
