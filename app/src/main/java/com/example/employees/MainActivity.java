@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (spinner.getSelectedItemPosition() == 1) {
-                    //Collections.sort(data, Collections.reverseOrder());
                     getTextFromSQL(v, "Select * FROM Employees ORDER BY Age ASC");
                 }
 
@@ -160,12 +159,6 @@ public class MainActivity extends AppCompatActivity {
             if (connection != null) {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(query);
-
-                Integer id = null;
-                String surname = null;
-                String name = null;
-                Integer age = null;
-                String img = null;
                 while (resultSet.next()) {
                     Mask tempMask = new Mask
                             (Integer.parseInt(resultSet.getString("Id")),
