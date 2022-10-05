@@ -1,14 +1,27 @@
 package com.example.employees;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -22,6 +35,8 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
     TextView txtName;
     TextView txtAge;
     Connection connection;
+    ImageView imageView;
+    String Image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +55,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
         btnDel = findViewById(R.id.btnDel);
         btnDel.setOnClickListener(this);
 
-        txtSurname = findViewById(R.id.FindSurname);
+        txtSurname = findViewById(R.id.Surname);
         txtSurname.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)
                 txtSurname.setHint("");
@@ -64,7 +79,73 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
                 txtAge.setHint("Возраст");
         });
 
+        imageView = findViewById(R.id.imageView);
+        imageView.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            pickImg.launch(intent);
+        });
+
         setText();
+    }
+
+    private final ActivityResultLauncher<Intent> pickImg = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == RESULT_OK) {
+            if (result.getData() != null) {
+                Uri uri = result.getData().getData();
+                try {
+                    InputStream is = getContentResolver().openInputStream(uri);
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                    Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
+                    cursor.moveToFirst();
+
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    String picturePath = cursor.getString(columnIndex);
+                    cursor.close();
+
+                    ExifInterface exif = null;
+                    try {
+                        File pictureFile = new File(picturePath);
+                        exif = new ExifInterface(pictureFile.getAbsolutePath());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    int orientation = ExifInterface.ORIENTATION_NORMAL;
+
+                    if (exif != null)
+                        orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+                    switch (orientation) {
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            bitmap = rotateBitmap(bitmap, 90);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            bitmap = rotateBitmap(bitmap, 180);
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            bitmap = rotateBitmap(bitmap, 270);
+                            break;
+                    }
+
+
+                    imageView.setImageBitmap(bitmap);
+                    Image = MainActivity.encodeImage(bitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    });
+
+    private static Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     private void setText(){
@@ -106,7 +187,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
                 String Age = txtAge.getText().toString();
 
                 query = "UPDATE Employees SET Surname = '" + Surname +
-                        "', Firstname ='" + Name + "', Age = " + Age +
+                        "', Firstname ='" + Name + "', Age = " + Age + "', Image = " + Image +
                         " WHERE Id = " + MainActivity.id;
                 updateQuery(query, "Данные успешно изменены");
                 break;

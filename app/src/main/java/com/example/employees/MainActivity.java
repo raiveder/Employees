@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Spinner spinner;
     Connection connection;
     Button btnAdd;
-    //ImageView imageView;
+    ImageView imageView;
     EditText findBySurname;
     static String id;
 
@@ -130,32 +130,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        /*imageView.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            pickImg.launch(intent);        });*/
-
         getTextFromSQL(v, "Select * FROM Employees");
     }
 
-    //отдельный метод для открытия
-   /* private final ActivityResultLauncher<Intent> pickImg = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (result.getResultCode() == RESULT_OK) {
-            if (result.getData() != null) {
-                Uri uri = result.getData().getData();
-                try {
-                    InputStream is = getContentResolver().openInputStream(uri);
-                    Bitmap bitmap = BitmapFactory.decodeStream(is);
-                    imageView.setImageBitmap(bitmap);
-                    String encodedImage = encodeImage(bitmap); //
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    });
 
-    //Из строки в изображение
+
+    /*//Из строки в изображение
     private Bitmap getImgBitmap(String encodedImg) {
         if (encodedImg != null) {
             byte[] bytes = new byte[0];
@@ -166,11 +146,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return BitmapFactory.decodeResource(DeteilsMask.this.getResources(),
                 R.drawable.picture);
-    }
+    }*/
 
     //Изображение в строку
-    private String encodeImage(Bitmap bitmap) {
-        int prevW = 100;
+    public static String encodeImage(Bitmap bitmap) {
+        int prevW = 150;
         int prevH = bitmap.getHeight() * prevW / bitmap.getWidth();
         Bitmap b = Bitmap.createScaledBitmap(bitmap, prevW, prevH, false);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -180,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return Base64.getEncoder().encodeToString(bytes);
         }
         return "";
-    }*/
+    }
 
     public void enterMobile() {
         pAdapter.notifyDataSetInvalidated();

@@ -11,8 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/btnAdd"
+        app:layout_constraintBottom_toTopOf="@id/lineFunc"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -41,7 +42,7 @@
 
         <EditText
             android:id="@+id/FindSurname"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/surname"
             android:paddingTop="0px"
@@ -52,19 +53,6 @@
             app:layout_constraintTop_toTopOf="@id/lineFunc" />
     </LinearLayout>
 
-    <android.widget.Button
-        android:id="@+id/btnAdd"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="100dp"
-        android:layout_marginBottom="40dp"
-        android:background="@drawable/buttonbackground"
-        android:text="@string/addData"
-        app:layout_constraintBottom_toTopOf="@id/lineHeader"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lineFunc" />
-
     <LinearLayout
         android:id="@+id/lineHeader"
         android:layout_width="0dp"
@@ -74,7 +62,7 @@
         app:layout_constraintBottom_toTopOf="@id/lvData"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnAdd">
+        app:layout_constraintTop_toBottomOf="@id/lineFunc">
 
         <TextView
             android:id="@+id/tvPhoto"
@@ -138,10 +126,23 @@
             android:layout_height="500dp"
             android:clickable="true"
             android:focusable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btnAdd"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lineHeader"
             tools:ignore="UsingOnClickInXml" />
+
+    <android.widget.Button
+        android:id="@+id/btnAdd"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="100dp"
+
+        android:background="@drawable/buttonbackground"
+        android:text="@string/addData"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lvData" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
