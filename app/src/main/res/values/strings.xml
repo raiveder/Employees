@@ -12,7 +12,8 @@
     <string name="sort">Сортировка:</string>
     <string-array name="spinnerItems">
         <item>нет</item>
-        <item>по возрастанию</item>
-        <item>по убыванию</item>
+        <item>по фамилии</item>
+        <item>по имени</item>
+        <item>по возрасту</item>
     </string-array>
 </resources>

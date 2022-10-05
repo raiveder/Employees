@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinner;
     Connection connection;
     Button btnAdd;
-    ImageView imageView;
     EditText findBySurname;
     static String id;
 
@@ -71,7 +70,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                getTextFromSQL(v, "Select * FROM Employees WHERE Surname LIKE '%" + findBySurname.getText() + "%'");
+                getTextFromSQL(v, "Select * FROM Employees WHERE Surname LIKE '" +
+                        findBySurname.getText() + "%'");
+                sort();
             }
 
             @Override
@@ -87,20 +88,7 @@ public class MainActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-
-                findBySurname.setText("");
-
-                if (spinner.getSelectedItemPosition() == 0) {
-                    getTextFromSQL(v, "Select * FROM Employees");
-                }
-
-                if (spinner.getSelectedItemPosition() == 1) {
-                    getTextFromSQL(v, "Select * FROM Employees ORDER BY Age ASC");
-                }
-
-                if (spinner.getSelectedItemPosition() == 2) {
-                    getTextFromSQL(v, "Select * FROM Employees ORDER BY Age DESC");
-                }
+                sort();
             }
 
             @Override
@@ -111,27 +99,47 @@ public class MainActivity extends AppCompatActivity {
         });
 
         listView = findViewById(R.id.lvData);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                try {
-                    id = String.valueOf(arg3);
-                    ConnectionHelper dbHelper = new ConnectionHelper();
-                    connection = dbHelper.connectionClass();
-                    if (connection != null) {
-                        Intent intent = new Intent(MainActivity.this, Change.class);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(MainActivity.this, "Проверьте подключение!", Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception ex) {
-                    Toast.makeText(MainActivity.this, "Возникла ошибка!", Toast.LENGTH_LONG).show();
+        listView.setOnItemClickListener((arg0, arg1, position, arg3) -> {
+            try {
+                id = String.valueOf(arg3);
+                ConnectionHelper dbHelper = new ConnectionHelper();
+                connection = dbHelper.connectionClass();
+                if (connection != null) {
+                    Intent intent = new Intent(MainActivity.this, Change.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(MainActivity.this, "Проверьте подключение!",
+                            Toast.LENGTH_LONG).show();
                 }
+            } catch (Exception ex) {
+                Toast.makeText(MainActivity.this, "Возникла ошибка!",
+                        Toast.LENGTH_LONG).show();
             }
         });
 
         getTextFromSQL(v, "Select * FROM Employees");
+    }
+
+    private void sort() {
+        if (spinner.getSelectedItemPosition() == 0) {
+            getTextFromSQL(v, "Select * FROM Employees WHERE Surname LIKE '" +
+                    findBySurname.getText() + "%'");
+        }
+
+        if (spinner.getSelectedItemPosition() == 1) {
+            getTextFromSQL(v, "Select * FROM Employees WHERE Surname LIKE '" +
+                    findBySurname.getText() + "%' ORDER BY Surname ASC");
+        }
+
+        if (spinner.getSelectedItemPosition() == 2) {
+            getTextFromSQL(v, "Select * FROM Employees WHERE Surname LIKE '" +
+                    findBySurname.getText() + "%' ORDER BY Firstname DESC");
+        }
+
+        if (spinner.getSelectedItemPosition() == 3) {
+            getTextFromSQL(v, "Select * FROM Employees WHERE Surname LIKE '" +
+                    findBySurname.getText() + "%' ORDER BY Age DESC");
+        }
     }
 
     public static String encodeImage(Bitmap bitmap) {
@@ -162,10 +170,10 @@ public class MainActivity extends AppCompatActivity {
                 while (resultSet.next()) {
                     Mask tempMask = new Mask
                             (Integer.parseInt(resultSet.getString("Id")),
-                             resultSet.getString("Surname"),
-                             resultSet.getString("Firstname"),
-                             Integer.parseInt(resultSet.getString("Age")),
-                             resultSet.getString("Image")
+                                    resultSet.getString("Surname"),
+                                    resultSet.getString("Firstname"),
+                                    Integer.parseInt(resultSet.getString("Age")),
+                                    resultSet.getString("Image")
                             );
 
                     data.add(tempMask);
