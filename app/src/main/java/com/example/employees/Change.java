@@ -90,7 +90,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
         setText();
     }
 
-    private final ActivityResultLauncher<Intent> pickImg = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+    public final ActivityResultLauncher<Intent> pickImg = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == RESULT_OK) {
             if (result.getData() != null) {
                 Uri uri = result.getData().getData();
@@ -159,14 +159,14 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(query);
 
-                String img = null;
+                String img = "null";
                 while (resultSet.next()) {
                     txtSurname.setText(resultSet.getString(2));
                     txtName.setText(resultSet.getString(3));
                     txtAge.setText(resultSet.getString(4));
                     img = resultSet.getString(5);
                 }
-                if (img == null) {
+                if (img.equals("null")) {
                     imageView.setImageResource(R.drawable.stub);
                 } else {
                     imageView.setImageBitmap(getImgBitmap(img));

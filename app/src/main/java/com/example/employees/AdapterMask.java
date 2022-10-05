@@ -59,8 +59,7 @@ public class AdapterMask extends BaseAdapter {
         Surname.setText(mask.getSurname());
         Name.setText(mask.getName());
         Age.setText(Integer.toString(mask.getAge()));
-        String s = mask.getImage();
-        if (mask.getImage() == null) {
+        if (mask.getImage().equals("null")) {
             Image.setImageResource(R.drawable.stub);
         } else {
             Image.setImageBitmap(getUserImage(mask.getImage()));
