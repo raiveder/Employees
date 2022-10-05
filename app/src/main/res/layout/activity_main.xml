@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:text="@string/sort"
             android:textColor="@color/black"
-            android:textSize="8pt" />
+            android:textSize="18dp" />
 
         <Spinner
             android:id="@+id/spinner"
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/surname"
             android:paddingTop="0px"
-            android:textSize="8pt" />
+            android:textSize="18dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -58,7 +58,7 @@
             android:text="@string/photo"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="8pt" />
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/tvSurname"
@@ -68,7 +68,7 @@
             android:text="@string/surname"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="8pt" />
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/tvName"
@@ -78,7 +78,7 @@
             android:text="@string/name"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="8pt" />
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/tvAge"
@@ -88,7 +88,7 @@
             android:text="@string/age"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="8pt" />
+            android:textSize="18dp" />
     </LinearLayout>
 
     <ListView
