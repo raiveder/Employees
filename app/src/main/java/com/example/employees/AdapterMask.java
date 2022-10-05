@@ -34,22 +34,21 @@ public class AdapterMask extends BaseAdapter {
     }
 
     @Override
-    public long getItemId(int i)
-    {
+    public long getItemId(int i) {
         return maskList.get(i).getId();
     }
-    private Bitmap getUserImage(String encodedImg)
-    {
-        if(encodedImg!=null&& !encodedImg.equals("null")) {
+
+    private Bitmap getUserImage(String encodedImg) {
+        if (encodedImg != null && !encodedImg.equals("null")) {
             byte[] bytes = Base64.decode(encodedImg, Base64.DEFAULT);
             return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        }
-        else
-            return null;}
+        } else
+            return null;
+    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View v = View.inflate(mContext,R.layout.item_mask,null);
+        View v = View.inflate(mContext, R.layout.item_mask, null);
 
         TextView Surname = v.findViewById(R.id.Surname);
         TextView Name = v.findViewById(R.id.Name);
@@ -60,9 +59,13 @@ public class AdapterMask extends BaseAdapter {
         Surname.setText(mask.getSurname());
         Name.setText(mask.getName());
         Age.setText(Integer.toString(mask.getAge()));
-        Image.setImageBitmap(getUserImage(mask.getImage()));
+        String s = mask.getImage();
+        if (mask.getImage() == null) {
+            Image.setImageResource(R.drawable.stub);
+        } else {
+            Image.setImageBitmap(getUserImage(mask.getImage()));
+        }
 
         return v;
     }
-
 }

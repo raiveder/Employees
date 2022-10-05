@@ -1,14 +1,22 @@
 package com.example.employees;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.Statement;
 
@@ -19,6 +27,8 @@ public class AddData extends AppCompatActivity implements View.OnClickListener {
     TextView txtSurname;
     TextView txtName;
     TextView txtAge;
+    ImageView imageView;
+    String Image;
     Connection connection;
 
     @Override
@@ -35,7 +45,7 @@ public class AddData extends AppCompatActivity implements View.OnClickListener {
         btnAdd = findViewById(R.id.btnAdd);
         btnAdd.setOnClickListener(this);
 
-        txtSurname = findViewById(R.id.FindSurname);
+        txtSurname = findViewById(R.id.Surname);
         txtSurname.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)
                 txtSurname.setHint("");
@@ -59,7 +69,29 @@ public class AddData extends AppCompatActivity implements View.OnClickListener {
                 txtAge.setHint("Возраст");
         });
 
+        imageView = findViewById(R.id.imageView);
+        imageView.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            pickImg.launch(intent);
+        });
     }
+
+    private final ActivityResultLauncher<Intent> pickImg = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == RESULT_OK) {
+            if (result.getData() != null) {
+                Uri uri = result.getData().getData();
+                try {
+                    InputStream is = getContentResolver().openInputStream(uri);
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    imageView.setImageBitmap(bitmap);
+                    Image = MainActivity.encodeImage(bitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    });
 
     @Override
     public void onClick(View v) {
@@ -76,7 +108,7 @@ public class AddData extends AppCompatActivity implements View.OnClickListener {
 
                     if (connection != null) {
                         String query = "INSERT INTO Employees VALUES('" + Surname + "', '" + Name +
-                                "', " + Age + ")";
+                                "', " + Age + ", '" + Image + "')";
                         Statement statement = connection.createStatement();
                         statement.executeUpdate(query);
 

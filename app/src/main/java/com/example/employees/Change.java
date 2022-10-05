@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Base64;
 
 public class Change extends AppCompatActivity implements View.OnClickListener {
 
@@ -98,7 +99,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
                     Bitmap bitmap = BitmapFactory.decodeStream(is);
 
 
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                    /*String[] filePathColumn = {MediaStore.Images.Media.DATA};
                     Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
                     cursor.moveToFirst();
 
@@ -130,7 +131,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
                         case ExifInterface.ORIENTATION_ROTATE_270:
                             bitmap = rotateBitmap(bitmap, 270);
                             break;
-                    }
+                    }*/
 
 
                     imageView.setImageBitmap(bitmap);
@@ -148,7 +149,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
-    private void setText(){
+    private void setText() {
         try {
             ConnectionHelper dbHelper = new ConnectionHelper();
             connection = dbHelper.connectionClass();
@@ -158,10 +159,17 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(query);
 
+                String img = null;
                 while (resultSet.next()) {
                     txtSurname.setText(resultSet.getString(2));
                     txtName.setText(resultSet.getString(3));
                     txtAge.setText(resultSet.getString(4));
+                    img = resultSet.getString(5);
+                }
+                if (img == null) {
+                    imageView.setImageResource(R.drawable.stub);
+                } else {
+                    imageView.setImageBitmap(getImgBitmap(img));
                 }
 
                 txtSurname.clearFocus();
@@ -176,6 +184,19 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
+    private Bitmap getImgBitmap(String encodedImg) {
+        if (encodedImg != null) {
+            byte[] bytes = new byte[0];
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                bytes = Base64.getDecoder().decode(encodedImg);
+            }
+            return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        }
+        return BitmapFactory.decodeResource(Change.this.getResources(),
+                R.drawable.picture);
+    }
+
+
     @Override
     public void onClick(View v) {
         String query;
@@ -187,8 +208,8 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
                 String Age = txtAge.getText().toString();
 
                 query = "UPDATE Employees SET Surname = '" + Surname +
-                        "', Firstname ='" + Name + "', Age = " + Age + "', Image = " + Image +
-                        " WHERE Id = " + MainActivity.id;
+                        "', Firstname ='" + Name + "', Age = " + Age + ", Image = '" + Image +
+                        "' WHERE Id = " + MainActivity.id;
                 updateQuery(query, "Данные успешно изменены");
                 break;
 

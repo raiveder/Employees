@@ -39,7 +39,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
     Spinner spinner;
     Connection connection;
@@ -75,10 +75,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
         });
 
         spinner = findViewById(R.id.spinner);
@@ -88,16 +90,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 findBySurname.setText("");
 
-                if(spinner.getSelectedItemPosition() == 0) {
+                if (spinner.getSelectedItemPosition() == 0) {
                     getTextFromSQL(v, "Select * FROM Employees");
                 }
 
-                if(spinner.getSelectedItemPosition() == 1) {
+                if (spinner.getSelectedItemPosition() == 1) {
                     //Collections.sort(data, Collections.reverseOrder());
                     getTextFromSQL(v, "Select * FROM Employees ORDER BY Age ASC");
                 }
 
-                if(spinner.getSelectedItemPosition() == 2) {
+                if (spinner.getSelectedItemPosition() == 2) {
                     getTextFromSQL(v, "Select * FROM Employees ORDER BY Age DESC");
                 }
             }
@@ -133,26 +135,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getTextFromSQL(v, "Select * FROM Employees");
     }
 
-
-
-    /*//Из строки в изображение
-    private Bitmap getImgBitmap(String encodedImg) {
-        if (encodedImg != null) {
-            byte[] bytes = new byte[0];
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                bytes = Base64.getDecoder().decode(encodedImg);
-            }
-            return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        }
-        return BitmapFactory.decodeResource(DeteilsMask.this.getResources(),
-                R.drawable.picture);
-    }*/
-
-    //Изображение в строку
     public static String encodeImage(Bitmap bitmap) {
-        int prevW = 150;
-        int prevH = bitmap.getHeight() * prevW / bitmap.getWidth();
-        Bitmap b = Bitmap.createScaledBitmap(bitmap, prevW, prevH, false);
+        Bitmap b = Bitmap.createScaledBitmap(bitmap, 150, 150, false);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         b.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
         byte[] bytes = byteArrayOutputStream.toByteArray();
@@ -177,14 +161,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(query);
 
+                Integer id = null;
+                String surname = null;
+                String name = null;
+                Integer age = null;
+                String img = null;
                 while (resultSet.next()) {
                     Mask tempMask = new Mask
-                            (resultSet.getInt("Id"),
-                                    resultSet.getString("Surname"),
-                                    resultSet.getString("Firstname"),
-                                    Integer.parseInt(resultSet.getString("Age")),
-                                    resultSet.getString("Image")
+                            (Integer.parseInt(resultSet.getString("Id")),
+                             resultSet.getString("Surname"),
+                             resultSet.getString("Firstname"),
+                             Integer.parseInt(resultSet.getString("Age")),
+                             resultSet.getString("Image")
                             );
+
                     data.add(tempMask);
                     pAdapter.notifyDataSetInvalidated();
                 }
@@ -196,22 +186,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         enterMobile();
 
-    }
-
-    @Override
-    public void onClick(View v) {
-        try {
-            id = String.valueOf((v.getId()));
-            ConnectionHelper dbHelper = new ConnectionHelper();
-            connection = dbHelper.connectionClass();
-            if (connection != null) {
-                    Intent intent = new Intent(MainActivity.this, Change.class);
-                    startActivity(intent);
-            } else {
-                Toast.makeText(this, "Проверьте подключение!", Toast.LENGTH_LONG).show();
-            }
-        } catch (Exception ex) {
-            Toast.makeText(this, "Возникла ошибка!", Toast.LENGTH_LONG).show();
-        }
     }
 }
