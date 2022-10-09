@@ -30,8 +30,9 @@ import java.util.Base64;
 public class Change extends AppCompatActivity implements View.OnClickListener {
 
     Button btnBack;
-    Button btnChange;
+    Button btnSafe;
     Button btnDel;
+    Button btnDelImage;
     TextView txtSurname;
     TextView txtName;
     TextView txtAge;
@@ -50,11 +51,14 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
             startActivity(intent);
         }));
 
-        btnChange = findViewById(R.id.btnChange);
-        btnChange.setOnClickListener(this);
+        btnSafe = findViewById(R.id.btnSafe);
+        btnSafe.setOnClickListener(this);
 
         btnDel = findViewById(R.id.btnDel);
         btnDel.setOnClickListener(this);
+
+        btnDelImage = findViewById(R.id.btnDelImage);
+        btnDelImage.setOnClickListener(this);
 
         txtSurname = findViewById(R.id.Surname);
         txtSurname.setOnFocusChangeListener((v, hasFocus) -> {
@@ -132,6 +136,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
                             bitmap = rotateBitmap(bitmap, 270);
                             break;
                     }*/
+                    //Для переворота неправильного изображения (не работает, exif всегда null)
 
 
                     imageView.setImageBitmap(bitmap);
@@ -166,11 +171,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
                     txtAge.setText(resultSet.getString(4));
                     img = resultSet.getString(5);
                 }
-                if (img.equals("null")) {
-                    imageView.setImageResource(R.drawable.stub);
-                } else {
-                    imageView.setImageBitmap(getImgBitmap(img));
-                }
+                imageView.setImageBitmap(getImgBitmap(img));
 
                 txtSurname.clearFocus();
                 txtName.clearFocus();
@@ -185,7 +186,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
     }
 
     private Bitmap getImgBitmap(String encodedImg) {
-        if (encodedImg != null) {
+        if (!encodedImg.equals("null")) {
             byte[] bytes = new byte[0];
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 bytes = Base64.getDecoder().decode(encodedImg);
@@ -193,7 +194,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
             return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         }
         return BitmapFactory.decodeResource(Change.this.getResources(),
-                R.drawable.picture);
+                R.drawable.stub);
     }
 
 
@@ -202,7 +203,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
         String query;
 
         switch (v.getId()) {
-            case R.id.btnChange:
+            case R.id.btnSafe:
                 String Surname = txtSurname.getText().toString();
                 String Name = txtName.getText().toString();
                 String Age = txtAge.getText().toString();
@@ -219,6 +220,11 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
 
                 Intent intent = new Intent(Change.this, MainActivity.class);
                 startActivity(intent);
+                break;
+
+            case R.id.btnDelImage:
+                Image = "null";
+                imageView.setImageBitmap(getImgBitmap(Image));
                 break;
         }
     }

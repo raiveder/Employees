@@ -18,7 +18,7 @@
             android:layout_height="100dp"
             android:textAlignment="center"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/picture" />
+            app:srcCompat="@drawable/stub" />
 
         <TextView
             android:id="@+id/Surname"

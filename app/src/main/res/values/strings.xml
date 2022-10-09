@@ -7,8 +7,9 @@
     <string name="photo">Фото</string>
     <string name="add">Добавить</string>
     <string name="back">Назад</string>
-    <string name="change">Изменить</string>
+    <string name="safe">Сохранить</string>
     <string name="delete">Удалить</string>
+    <string name="deleteImage">Удалить фото</string>
     <string name="sort">Сортировка:</string>
     <string-array name="spinnerItems">
         <item>нет</item>

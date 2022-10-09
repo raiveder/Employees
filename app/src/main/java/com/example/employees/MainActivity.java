@@ -143,7 +143,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static String encodeImage(Bitmap bitmap) {
-        Bitmap b = Bitmap.createScaledBitmap(bitmap, 150, 150, false);
+        int prevW = 1000; //Иначе теряется качество, quality 100 в compress не помогает
+        int prevH = bitmap.getHeight() * prevW / bitmap.getWidth();
+        int a = bitmap.getHeight();
+        int c = bitmap.getWidth();
+        //У вертикальных с камеры берёт ширину больше высоты, независимо от настоящих размеров
+        //Видимо, из-за этого переворачивает то, что , было снято вертикально
+
+        Bitmap b = Bitmap.createScaledBitmap(bitmap, prevW, prevH, false);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         b.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
         byte[] bytes = byteArrayOutputStream.toByteArray();

@@ -15,6 +15,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <android.widget.Button
+        android:id="@+id/btnDelImage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="100dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/buttonbackground"
+        android:text="@string/deleteImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView"
+        app:layout_constraintBottom_toTopOf="@id/Surname"/>
+
     <EditText
         android:id="@+id/Surname"
         android:layout_width="0dp"
@@ -23,7 +36,7 @@
         app:layout_constraintBottom_toTopOf="@id/Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView" />
+        app:layout_constraintTop_toBottomOf="@id/btnDelImage" />
 
     <EditText
         android:id="@+id/Name"
@@ -40,20 +53,20 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/age"
-        app:layout_constraintBottom_toTopOf="@id/btnChange"
+        app:layout_constraintBottom_toTopOf="@id/btnSafe"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/Name" />
 
     <android.widget.Button
-        android:id="@+id/btnChange"
+        android:id="@+id/btnSafe"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="5dp"
         android:background="@drawable/buttonbackground"
-        android:text="@string/change"
+        android:text="@string/safe"
         app:layout_constraintEnd_toStartOf="@id/btnDel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/Age" />
@@ -68,7 +81,7 @@
         android:background="@drawable/buttonbackground"
         android:text="@string/delete"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btnChange"
+        app:layout_constraintStart_toEndOf="@id/btnSafe"
         app:layout_constraintTop_toBottomOf="@id/Age" />
 
     <android.widget.Button
@@ -81,6 +94,6 @@
         android:text="@string/back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnChange" />
+        app:layout_constraintTop_toBottomOf="@id/btnSafe" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
