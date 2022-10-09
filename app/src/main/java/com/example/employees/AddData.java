@@ -48,25 +48,25 @@ public class AddData extends AppCompatActivity implements View.OnClickListener {
         txtSurname = findViewById(R.id.Surname);
         txtSurname.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)
-                txtSurname.setHint("");
+                txtSurname.setHint(null);
             else
-                txtSurname.setHint("Фамилия");
+                txtSurname.setHint(R.string.surname);
         });
 
         txtName = findViewById(R.id.Name);
         txtName.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)
-                txtName.setHint("");
+                txtName.setHint(null);
             else
-                txtName.setHint("Имя");
+                txtName.setHint(R.string.name);
         });
 
         txtAge = findViewById(R.id.Age);
         txtAge.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)
-                txtAge.setHint("");
+                txtAge.setHint(null);
             else
-                txtAge.setHint("Возраст");
+                txtAge.setHint(R.string.age);
         });
 
         imageView = findViewById(R.id.imageView);
@@ -84,6 +84,9 @@ public class AddData extends AppCompatActivity implements View.OnClickListener {
                 try {
                     InputStream is = getContentResolver().openInputStream(uri);
                     Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+                    //Здесь должен быть код для переворота изображения, но он не работает (в Change)
+
                     imageView.setImageBitmap(bitmap);
                     Image = MainActivity.encodeImage(bitmap);
                 } catch (Exception e) {

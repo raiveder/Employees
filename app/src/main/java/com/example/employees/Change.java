@@ -63,25 +63,25 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
         txtSurname = findViewById(R.id.Surname);
         txtSurname.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)
-                txtSurname.setHint("");
+                txtSurname.setHint(null);
             else
-                txtSurname.setHint("Фамилия");
+                txtSurname.setHint(R.string.surname);
         });
 
         txtName = findViewById(R.id.Name);
         txtName.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)
-                txtName.setHint("");
+                txtName.setHint(null);
             else
-                txtName.setHint("Имя");
+                txtName.setHint(R.string.name);
         });
 
         txtAge = findViewById(R.id.Age);
         txtAge.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)
-                txtAge.setHint("");
+                txtAge.setHint(null);
             else
-                txtAge.setHint("Возраст");
+                txtAge.setHint(R.string.age);
         });
 
         imageView = findViewById(R.id.imageView);
@@ -102,6 +102,9 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
                     InputStream is = getContentResolver().openInputStream(uri);
                     Bitmap bitmap = BitmapFactory.decodeStream(is);
 
+                    //Код для переворота изображения, если оно горизонтальное, проверить не смог,
+                    //не помогает, но пишут, что рабочий.
+                    //Не работает, потому что exif всегда null
 
                     /*String[] filePathColumn = {MediaStore.Images.Media.DATA};
                     Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
@@ -136,7 +139,6 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
                             bitmap = rotateBitmap(bitmap, 270);
                             break;
                     }*/
-                    //Для переворота неправильного изображения (не работает, exif всегда null)
 
 
                     imageView.setImageBitmap(bitmap);
@@ -173,10 +175,6 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
                 }
                 imageView.setImageBitmap(getImgBitmap(img));
 
-                txtSurname.clearFocus();
-                txtName.clearFocus();
-                txtAge.clearFocus();
-
             } else {
                 Toast.makeText(this, "Проверьте подключение!", Toast.LENGTH_LONG).show();
             }
@@ -200,7 +198,6 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        String query;
 
         switch (v.getId()) {
             case R.id.btnSafe:
@@ -208,7 +205,7 @@ public class Change extends AppCompatActivity implements View.OnClickListener {
                 String Name = txtName.getText().toString();
                 String Age = txtAge.getText().toString();
 
-                query = "UPDATE Employees SET Surname = '" + Surname +
+                String query = "UPDATE Employees SET Surname = '" + Surname +
                         "', Firstname ='" + Name + "', Age = " + Age + ", Image = '" + Image +
                         "' WHERE Id = " + MainActivity.id;
                 updateQuery(query, "Данные успешно изменены");

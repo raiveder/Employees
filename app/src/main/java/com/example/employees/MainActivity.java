@@ -1,16 +1,12 @@
 package com.example.employees;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -18,46 +14,33 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    static String id;
     Spinner spinner;
     Connection connection;
     Button btnAdd;
     EditText findBySurname;
-    static String id;
-
-    View v;
-    List<Mask> data;
     ListView listView;
-    AdapterMask pAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        v = findViewById(com.google.android.material.R.id.ghost_view);
 
         btnAdd = findViewById(R.id.btnAdd);
         btnAdd.setOnClickListener((view -> {
@@ -67,12 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
         findBySurname = findViewById(R.id.FindSurname);
         findBySurname.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void afterTextChanged(Editable editable) {
-                getTextFromSQL(v, "Select * FROM Employees WHERE Surname LIKE '" +
-                        findBySurname.getText() + "%'");
-                sort();
+                sort(spinner.getSelectedItemPosition());
             }
 
             @Override
@@ -88,14 +68,13 @@ public class MainActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                sort();
+                sort(position);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
                 return;
             }
-
         });
 
         listView = findViewById(R.id.lvData);
@@ -117,33 +96,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        getTextFromSQL(v, "Select * FROM Employees");
+        getTextFromSQL("Select * FROM Employees");
     }
 
-    private void sort() {
-        if (spinner.getSelectedItemPosition() == 0) {
-            getTextFromSQL(v, "Select * FROM Employees WHERE Surname LIKE '" +
-                    findBySurname.getText() + "%'");
-        }
+    private void sort(int position) {
+        String query = "Select * FROM Employees WHERE Surname LIKE '" +
+                findBySurname.getText() + "%'";
 
-        if (spinner.getSelectedItemPosition() == 1) {
-            getTextFromSQL(v, "Select * FROM Employees WHERE Surname LIKE '" +
-                    findBySurname.getText() + "%' ORDER BY Surname ASC");
-        }
+        switch (position) {
+            case 0:
+                getTextFromSQL(query);
+                break;
 
-        if (spinner.getSelectedItemPosition() == 2) {
-            getTextFromSQL(v, "Select * FROM Employees WHERE Surname LIKE '" +
-                    findBySurname.getText() + "%' ORDER BY Firstname DESC");
-        }
+            case 1:
+                getTextFromSQL(query + " ORDER BY Surname ASC");
+                break;
 
-        if (spinner.getSelectedItemPosition() == 3) {
-            getTextFromSQL(v, "Select * FROM Employees WHERE Surname LIKE '" +
-                    findBySurname.getText() + "%' ORDER BY Age DESC");
+            case 2:
+                getTextFromSQL(query + " ORDER BY Firstname ASC");
+                break;
+
+            case 3:
+                getTextFromSQL(query + " ORDER BY Age ASC");
+                break;
         }
     }
 
     public static String encodeImage(Bitmap bitmap) {
-        int prevW = 1000; //Иначе теряется качество, quality 100 в compress не помогает
+        int prevW = 500; //Иначе заметны потери качества, quality 100 в compress не помогает
         int prevH = bitmap.getHeight() * prevW / bitmap.getWidth();
         int a = bitmap.getHeight();
         int c = bitmap.getWidth();
@@ -160,14 +140,9 @@ public class MainActivity extends AppCompatActivity {
         return "";
     }
 
-    public void enterMobile() {
-        pAdapter.notifyDataSetInvalidated();
-        listView.setAdapter(pAdapter);
-    }
-
-    public void getTextFromSQL(View v, String query) {
-        data = new ArrayList<Mask>();
-        pAdapter = new AdapterMask(MainActivity.this, data);
+    public void getTextFromSQL(String query) {
+        List<Mask> data = new ArrayList<Mask>();
+        AdapterMask pAdapter = new AdapterMask(MainActivity.this, data);
         try {
             ConnectionHelper connectionHelper = new ConnectionHelper();
             connection = connectionHelper.connectionClass();
@@ -192,7 +167,11 @@ public class MainActivity extends AppCompatActivity {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        enterMobile();
+        enterMobile(pAdapter);
+    }
 
+    public void enterMobile(AdapterMask pAdapter) {
+        pAdapter.notifyDataSetInvalidated();
+        listView.setAdapter(pAdapter);
     }
 }

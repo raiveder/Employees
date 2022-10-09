@@ -13,14 +13,12 @@ import android.widget.TextView;
 import java.util.List;
 
 public class AdapterMask extends BaseAdapter {
-
-    private Context mContext;
-
     public AdapterMask(Context mContext, List<Mask> maskList) {
         this.mContext = mContext;
         this.maskList = maskList;
     }
 
+    private Context mContext;
     List<Mask> maskList;
 
     @Override
@@ -39,7 +37,7 @@ public class AdapterMask extends BaseAdapter {
     }
 
     private Bitmap getUserImage(String encodedImg) {
-        if (encodedImg != null && !encodedImg.equals("null")) {
+        if (!encodedImg.equals("null")) {
             byte[] bytes = Base64.decode(encodedImg, Base64.DEFAULT);
             return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         } else
